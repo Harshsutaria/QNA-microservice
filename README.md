@@ -31,3 +31,11 @@ Start the server
   npm run start
 ```
 
+
+## Deployment
+
+This application is already deployed in reder(hoisting service). So we Can access the endpoints using the following domain.
+
+domain :- https://qna-microservice.onrender.com do
+
+
