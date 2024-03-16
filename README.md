@@ -6,7 +6,28 @@ This is a typescript(powered by node) project created for login users to perform
 We are using the combination of express and postgres sql for serving clients and persisting data into the data base. In Addition we are using JWT tokens to authorized users.
 
 
+## Run Locally
 
+Clone the project.
 
+```bash
+  git clone https://github.com/Harshsutaria/QNA-microservice.git
+```
 
+Go to the project directory
+
+```bash
+  cd QNA-microservice
+```
+
+Install dependency
+```bash
+  npm i
+```
+
+Start the server
+
+```bash
+  npm run start
+```
 
