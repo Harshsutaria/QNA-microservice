@@ -84,6 +84,40 @@ export class AnswerDao {
     return data;
   }
 
+  /**
+   * Check if user already submitted answer for the question.
+   * @param userId
+   * @param questionId
+   * @returns
+   */
+  async getUserSubmissionFromPostgres(
+    userId: string,
+    questionId: string
+  ): Promise<AnswerInterface> {
+    let result: any;
+    let data: any;
+    // Preparing sql update query
+    const sqlQuery: string = `SELECT * FROM ${this.tableName} where "userId" = $1 AND "questionId" = $2`;
+
+    // initializing connection with the database
+    await this.postgres.connect(this.dataBaseName);
+
+    // Trying to execute postgres query
+    try {
+      data = await this.postgres.execute(sqlQuery, [userId, questionId]);
+      logger.info(`Answer Fetch by Id dao operation is successful`);
+    } catch (error) {
+      logger.error(`Getting error while fetching Answer ${error}`);
+      throw new Error(`Getting error while fetching Answer ${error}`);
+    }
+
+    if (Array.isArray(data) && data.length > 0) {
+      return data[0];
+    }
+
+    return result;
+  }
+
   private async getAnswersByQuestionId(params: any): Promise<AnswerInterface> {
     // setting pagination params
     let data: any;

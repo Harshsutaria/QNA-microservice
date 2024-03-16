@@ -28,6 +28,17 @@ export class AnswerService {
       throw new Error(validationResult.message);
     }
 
+    // return if user has not submitted answer return
+    const prevSubmission = await this.answerDao.getUserSubmissionFromPostgres(
+      body.userId,
+      body.questionId
+    );
+    if (prevSubmission) {
+      throw new Error(
+        "User has already submitted answer for this question!!!!"
+      );
+    }
+
     // create answer object
     const answer: AnswerInterface = this.createAnswerRequestPayload(body);
 

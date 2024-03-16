@@ -7,6 +7,7 @@ import { verifyJWT } from "../../utils/serviceUtils/jwtLib";
 const handler: any = {};
 
 handler.create = async function (req: any, res: any) {
+  logger.info(`INSIDE SUBMIT QUESTION HANDLER`);
   let { author, params, body } = getServiceArgs(req, res);
 
   // validated JWT token.
