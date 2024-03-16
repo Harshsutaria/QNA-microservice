@@ -36,6 +36,6 @@ Start the server
 
 This application is already deployed in reder(hoisting service). So we Can access the endpoints using the following domain.
 
-domain :- https://qna-microservice.onrender.com do
+domain :- https://qna-microservice.onrender.com
 
 
