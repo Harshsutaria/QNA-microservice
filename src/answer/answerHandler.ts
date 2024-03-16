@@ -7,7 +7,7 @@ import { verifyJWT } from "../../utils/serviceUtils/jwtLib";
 const handler: any = {};
 
 handler.create = async function (req: any, res: any) {
-  logger.info(`INSIDE SUBMIT QUESTION HANDLER`);
+  logger.info(`INSIDE SUBMIT ANSWER HANDLER`);
   let { author, params, body } = getServiceArgs(req, res);
 
   // validated JWT token.
@@ -126,6 +126,38 @@ function getServiceArgs(req: any, res: any) {
     body,
   };
 }
+
+handler.analytics = async function (req: any, res: any) {
+  logger.info(`INSIDE ANALYTICS QUESTION HANDLER`);
+  let { author, params } = getServiceArgs(req, res);
+
+  // validated JWT token.
+  const validationResult = validateAuthorizationToken(author);
+
+  if (!params.questionId) {
+    return res.json({
+      code: HTTPConst.clientError.BAD_REQUEST,
+      message: "QUESTION ID IS MANDATORY TO GENERATE ANALYTICS",
+    });
+  }
+
+  const answerService = new AnswerService();
+
+  try {
+    const result = await answerService.analytics(author, params);
+    return res.json({
+      code: HTTPConst.success.OK,
+      message: "Result Fetched SuccessFully!!!",
+      result,
+    });
+  } catch (error: any) {
+    return res.json({
+      code: HTTPConst.serverError.INTERNAL_SERVER,
+      message: "Result Fetching failed!!!",
+      errorMessage: error.message,
+    });
+  }
+};
 
 /**
  * Wrapper to validate JWT token

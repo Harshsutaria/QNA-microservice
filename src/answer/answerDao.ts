@@ -118,6 +118,33 @@ export class AnswerDao {
     return result;
   }
 
+  /**
+   * analyze answers.
+   * @param questionId
+   * @returns
+   */
+  async getAnalyticsFromPostgres(questionId: string): Promise<any> {
+    let result: any;
+    let data: any;
+
+    // Preparing sql update query
+    const sqlQuery: string = `select count(answer),answer from ${this.tableName} where "questionId" = $1 group by answer`;
+
+    // initializing connection with the database
+    await this.postgres.connect(this.dataBaseName);
+
+    // Trying to execute postgres query
+    try {
+      data = await this.postgres.execute(sqlQuery, [questionId]);
+      logger.info(`Answer Fetch dao operation is successful`);
+    } catch (error) {
+      logger.error(`Getting error while fetching Answer ${error}`);
+      throw new Error(`Getting error while fetching Answer ${error}`);
+    }
+
+    return this.processAnalyticsResult(data);
+  }
+
   private async getAnswersByQuestionId(params: any): Promise<AnswerInterface> {
     // setting pagination params
     let data: any;
@@ -150,5 +177,32 @@ export class AnswerDao {
     }
 
     return result;
+  }
+
+  private processAnalyticsResult(data: Array<any>) {
+    logger.info(`data is ${JSON.stringify(data)}`);
+    const result = {
+      count: 0,
+      message: "No student Attempted this Question",
+    };
+
+    const analyticsResult: any = {};
+
+    if (Array.isArray(data) && !data.length) {
+      return result;
+    }
+
+    analyticsResult.totalAttempted = data.reduce(
+      (sum, row: any) => parseInt(row.count) + sum,
+      0
+    );
+
+    for (let row of data) {
+      analyticsResult[row.answer] = `${
+        (parseInt(row.count) / analyticsResult.totalAttempted) * 100
+      }%`;
+    }
+
+    return analyticsResult;
   }
 }

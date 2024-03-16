@@ -69,6 +69,22 @@ export class AnswerService {
     return result;
   }
 
+  async analytics(author: any, params: any) {
+    logger.info(
+      `INSIDE ANALYTICS ANSWER SERVICE ${JSON.stringify({
+        author,
+        params,
+      })}`
+    );
+
+    // fetching analytics from database
+    const result: AnswerInterface =
+      await this.answerDao.getAnalyticsFromPostgres(params.questionId);
+
+    // returning result
+    return result;
+  }
+
   private createAnswerRequestPayload(payload: any): AnswerInterface {
     return {
       answerId: uuidv4(),
